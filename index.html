@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+  <!-- 输入框 -->
+  <div class="plan">
+    <h1>传智-ToDoList</h1>
+    <div>
+      <input class="txt" placeholder="请输入目标..." type="text">
+      <input type="button" class="add" value="添加">
+    </div>
+  </div>
+  <div class="w">
+    <!-- 正在完成的任务 -->
+    <h2>正在进行的任务</h2>
+    <ol>
+      <!-- <li><input type="checkbox"><span>吃饭</span></li>
+      <li><input type="checkbox"><span>吃饭</span></li>
+      <li><input type="checkbox"><span>吃饭</span></li>
+      <li><input type="checkbox"><span>吃饭</span></li> -->
+    </ol>
+    <!-- 已经完成的任务 -->
+    <h2>已经完成的任务</h2>
+    <ul>
+      <!-- <li><span>吃饭</span></li>
+        <li><span>吃饭</span></li>
+        <li><span>吃饭</span></li>
+        <li><span>吃饭</span></li> -->
+
+    </ul>
+  </div>
+  <script src="lib/jquery-1.12.4.js"></script>
+  <!-- <script src="js/index.js"></script> -->
+  <script type="text/javascript">
+
+    //  // '[{"name":"吃饭","isOk":true},{"name":"睡觉","isOk":false}]'
+     
+    //  // 获取数据
+    //  var str = localStorage.getItem('toDoList');
+    //  // 判断
+    //  if (str == null) {
+    //     // 假设值
+    //     localStorage.setItem('toDoList', '[{"name":"吃饭","isOk":true},{"name":"睡觉","isOk":false}]');
+    //     // 再获取
+    //     str = localStorage.getItem('toDoList');
+    //  }
+    //  // 转换
+    //  var arr = JSON.parse(str);
+    //  // 遍历arr，能够遍历出来一个对象，就要有一个li，li要放到ol还是ul，就看isOK
+    //  for (var i = 0; i <arr.length; i++) {
+    //     // arr[i]==>{"name":"吃饭","isOk":true}
+    //     if (arr[i].isOk) {// 这种li要放到ul
+    //       $('<li></li>').attr('num', i).html('<span>'+ arr[i].name +'</span>').appendTo('ul')
+    //     } else {
+    //       $('<li></li>').attr('num', i).html('<input type="checkbox"><span>'+arr[i].name+'</span>').appendTo('ol');
+    //     }
+    //  }
+      //获取数据
+      var str = localStorage.getItem('toDoList');
+      //判断
+      if(str == null){
+        //假设值
+        localStorage.setItem('toDoList','[{"name":"吃饭","isOk":true},{"name":"睡觉","isOk":false}]');
+        //再获取
+        str = localStorage.getItem('toDoList');
+      }
+      //探讨数组中有几个数据，然后添加li到ol中
+      //转换str
+      var arr = JSON.parse(str);
+      //遍历arr，遍历出一个对象就放到对应的区域，用 isOk来判断
+      for(var i=0;i<arr.length;i++){
+        if(arr[i].isOK){
+          //放到ul中
+          $('<li></li>').attr('num',i).html('<span>'+arr[i].name+'</span>').appendTo('ul');
+        }else{
+          $('<li></li>').attr('num',i).html('<input type="checkbox"><span>'+arr[i].name+'</span>').appendTo('ol');
+
+        }
+      }
+
+
+
+      
+      // 1、实现页面效果
+      // 第一个：点击创建li，checkbox和span（内容）
+      $('.add').click(function(){
+        //创建li添加到
+        var li = $('<li></li>');
+        //添加到ol中
+        $('ol').append(li);
+        //设置li中内容
+        var txt = $('.txt').val();
+        //放到li中
+        li.html('<input type="checkbox"><span>'+txt+'</span>');
+        //清空内容
+        $('.txt').val('');
+        //创建li的时候，再给li添加一个num属性
+        li.attr('num',arr.length)
+        //将输入的内容添加到数组中去
+        arr.push({name:txt,'isOK':false});
+        //转化为字符串
+        str = JSON.stringify(arr);
+        //数据保存
+        localStorage.setItem('toDoList',str);
+      });
+      // 第二个：点击checkox让对应的li移动到下面
+      //因为checkbox是后来添加的，所以需要委派事件
+      $('ol').on('click','input',function(){
+        var li = $(this).parent();
+
+        $('ul').append(li);
+        //隐藏checkbox
+        $(this).hide();
+
+        //li要修改li.index
+        //把数组的索引值在li元素上体现出来，我们就可以根据这个索引值找到这个对象
+        //给li设置自定义属性，用来记录数组中对象的索引值
+        // 获取num值
+        var i = li.attr('num');
+        //根据索引值找到对象，把这个对象的isok改了
+        arr[i].isOK = true;
+        //转成字符串
+        str = JSON.stringify(arr);
+
+        //存储
+        localStorage.setItem(arr);
+
+      });
+
+      // 2、实现数据操作
+      /*[
+        {"name":"吃饭","isOk":true},
+        {"name":"睡觉","isOk":false},
+        {"name":"吃饭","isOk":true},
+      ]*/
+      //先获取本地数据
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+
+</html>
